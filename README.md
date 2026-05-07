@@ -27,8 +27,6 @@ Backend portion of the Group Workflow Organizer that handles user authentication
 
 ---
 
----
-
 ## API Mappings
 
 ---
