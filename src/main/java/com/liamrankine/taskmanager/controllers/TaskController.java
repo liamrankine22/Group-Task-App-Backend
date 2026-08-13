@@ -30,6 +30,11 @@ public class TaskController {
         return taskService.getTaskByID(id);
     }
 
+    @GetMapping("/user/{userId}")
+    public List<TaskResponse> getTasksByUserId(@PathVariable Long userId) {
+        return taskService.getTaskByUserId(userId);
+    }
+
     @GetMapping("/group/{groupId}")
     public List<TaskResponse> getTasksByGroupId(@PathVariable Long groupId) {
         return taskService.getTasksByGroupId(groupId);

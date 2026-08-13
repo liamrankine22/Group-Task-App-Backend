@@ -4,10 +4,7 @@ import com.liamrankine.taskmanager.datatransfer.requests.task.TaskCreationReques
 import com.liamrankine.taskmanager.datatransfer.requests.task.TaskUpdateRequest;
 import com.liamrankine.taskmanager.datatransfer.requests.taskassignment.TaskAssignmentCreationRequest;
 import com.liamrankine.taskmanager.datatransfer.responses.TaskResponse;
-import com.liamrankine.taskmanager.entities.AppUser;
-import com.liamrankine.taskmanager.entities.Group;
-import com.liamrankine.taskmanager.entities.Task;
-import com.liamrankine.taskmanager.entities.TaskAssignment;
+import com.liamrankine.taskmanager.entities.*;
 import com.liamrankine.taskmanager.repositories.*;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
@@ -56,6 +53,28 @@ public class TaskService {
     public TaskResponse getTaskByID(Long id) {
         Task task = taskRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find task with id: " + id));
         return new TaskResponse(task);
+    }
+
+    public List<TaskResponse> getTaskByUserId(Long userId) {
+        AppUser user = appUserRepo.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find user with id: " + userId));
+
+        List<Group> userGroups = user.getMemberships()
+                .stream()
+                .map(GroupMembership::getGroup)
+                .toList();
+
+        List<Task> userTasks = new ArrayList<>();
+        for (Group group : userGroups) {
+            userTasks.addAll(group.getTasks());
+        }
+
+        List<TaskResponse> taskResponses = new ArrayList<>();
+        for (Task task : userTasks) {
+            TaskResponse response = new TaskResponse(task);
+            taskResponses.add(response);
+        }
+
+        return taskResponses;
     }
 
     public List<TaskResponse> getTasksByGroupId(Long groupId) {

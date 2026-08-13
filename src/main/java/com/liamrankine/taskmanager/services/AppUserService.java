@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppUserService {
@@ -58,6 +59,18 @@ public class AppUserService {
         return new AppUserResponse(user);
     }
 
+    public List<AppUserResponse> getUsersByGroupId(Long groupId) {
+        Group group = groupRepo.getReferenceById(groupId);
+        List<AppUser> appUsers = new ArrayList<>(group.getMemberships().stream().map(GroupMembership::getMember).toList());
+
+        List<AppUserResponse> userResponses = new ArrayList<>();
+        for (AppUser user : appUsers) {
+            AppUserResponse response = new AppUserResponse(user);
+            userResponses.add(response);
+        }
+        return userResponses;
+    }
+
     //POSTS
     @Transactional
     public void registerUser(AppUserRegistrationRequest request) {
@@ -67,7 +80,7 @@ public class AppUserService {
         AppUser newUser = new AppUser(request.getUsername(), null, request.getEmail());
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        Group newGroup = new Group(request.getUsername()+"'s Group");
+        Group newGroup = new Group(request.getUsername()+"'s Group", request.getUsername() + "'s initiating group");
         GroupMembership userMembership = new GroupMembership(newGroup, newUser, GroupRole.OWNER);
         newUser.addMembership(userMembership);
 

@@ -11,13 +11,14 @@ public class GroupResponse {
 
     private Long id;
     private String name;
+    private String description;
     private List<GroupMembershipResponse> membershipResponses = new ArrayList<>();
     private List<TaskResponse> taskResponses = new ArrayList<>();
 
     // Constructors
     public GroupResponse() {}
 
-    public GroupResponse(Long id, String name) {
+    public GroupResponse(Long id, String name, String description) {
         this.id = id;
         this.name = name;
     }
@@ -34,6 +35,8 @@ public class GroupResponse {
     public String getName() {
         return name;
     }
+
+    public String getDescription() { return description; }
 
     public List<GroupMembershipResponse> getMembershipResponses() {
         return membershipResponses;
@@ -52,6 +55,8 @@ public class GroupResponse {
         this.name = name;
     }
 
+    public void setDescription(String description) { this.description = description; }
+
     public void setMembershipResponses(List<GroupMembershipResponse> membershipResponses) {
         this.membershipResponses = membershipResponses;
     }
@@ -64,6 +69,7 @@ public class GroupResponse {
     private void convertGroup(Group group) {
         this.id = group.getId();
         this.name = group.getName();
+        this.description = group.getDescription();
 
         if (group.getMemberships() != null) {
             for (GroupMembership membership : group.getMemberships()) {

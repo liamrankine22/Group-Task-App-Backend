@@ -69,7 +69,7 @@ public class GroupService {
     @Transactional
     public void createGroup(GroupCreationRequest request) {
 
-        Group group = new Group(request.getName());
+        Group group = new Group(request.getName(), request.getDescription());
         AppUser owner = appUserRepo.findById(request.getCreatorId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find user"));
 
         GroupMembership membership = new GroupMembership(group, owner, GroupRole.OWNER);

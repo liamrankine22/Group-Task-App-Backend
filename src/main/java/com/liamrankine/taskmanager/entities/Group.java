@@ -12,6 +12,7 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String description;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<GroupMembership> memberships = new HashSet<>();
@@ -21,8 +22,9 @@ public class Group {
 
     //Constructors
     public Group() {}
-    public Group(String name) {
+    public Group(String name, String description) {
         this.name = name;
+        this.description = description;
     }
 
     //Helpers
@@ -44,12 +46,14 @@ public class Group {
 
     //Setters
     public void setName(String name) { this.name = name; }
+    public void setDescription(String description) {this.description = description;}
     public void setMemberships(Set<GroupMembership> memberships) { this.memberships = memberships; }
     public void setTasks(Set<Task> tasks) { this.tasks = tasks; }
 
     //Getters
     public Long getId() { return id;}
     public String getName() { return name; }
+    public String getDescription() { return description; }
     public Set<GroupMembership> getMemberships() { return memberships; }
     public Set<Task> getTasks() { return tasks; }
 }

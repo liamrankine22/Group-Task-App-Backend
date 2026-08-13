@@ -34,6 +34,11 @@ public class AppUserController {
         return appUserService.getUserByUsername(username);
     }
 
+    @GetMapping("/group/{groupId}")
+    public List<AppUserResponse> getUsersByGroupId(@PathVariable Long groupId) {
+        return appUserService.getUsersByGroupId(groupId);
+    }
+
     @PostMapping("/register")
     public void registerUser(@RequestBody AppUserRegistrationRequest request) {
         appUserService.registerUser(request);

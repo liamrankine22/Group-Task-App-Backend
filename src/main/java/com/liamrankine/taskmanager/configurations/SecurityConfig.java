@@ -1,10 +1,9 @@
 package com.liamrankine.taskmanager.configurations;
-import com.liamrankine.taskmanager.entities.AppUser;
-import com.liamrankine.taskmanager.entities.Group;
-import com.liamrankine.taskmanager.entities.GroupMembership;
+import com.liamrankine.taskmanager.entities.*;
 import com.liamrankine.taskmanager.enumerations.GroupRole;
 import com.liamrankine.taskmanager.repositories.AppUserRepository;
 import com.liamrankine.taskmanager.repositories.GroupRepository;
+import com.liamrankine.taskmanager.repositories.TaskRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +15,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.time.LocalDate;
 
 @Configuration
 @EnableWebSecurity
@@ -60,6 +61,7 @@ public class SecurityConfig {
     CommandLineRunner seedData(
             AppUserRepository userRepo,
             GroupRepository groupRepo,
+            TaskRepository taskRepo,
             PasswordEncoder encoder
     ) {
         return args -> {
@@ -69,11 +71,11 @@ public class SecurityConfig {
                 if (userRepo.findByUsername("Admin2").isPresent()) {
                     return;
                 }
-                UserMaker(userRepo, groupRepo, encoder, "Admin2", "password");
+                UserMaker(userRepo, groupRepo, taskRepo, encoder, "Admin2", "password");
                 return;
             }
 
-            UserMaker(userRepo, groupRepo, encoder, "Admin1", "password");
+            UserMaker(userRepo, groupRepo, taskRepo, encoder, "Admin1", "password");
         };
     }
 
@@ -82,7 +84,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    private void UserMaker(AppUserRepository userRepo, GroupRepository groupRepo, PasswordEncoder encoder, String name, String password) {
+    private void UserMaker(AppUserRepository userRepo, GroupRepository groupRepo, TaskRepository taskRepo, PasswordEncoder encoder, String name, String password) {
         AppUser user = new AppUser();
         user.setUsername(name);
         user.setPassword(encoder.encode(password));
@@ -98,6 +100,13 @@ public class SecurityConfig {
         group.addMembership(membership);
         user.addMembership(membership);
         userRepo.save(user);
+
+        Task openerTask = new Task("Welcome to Task Manager!", "Click on the ellipses button to view all information on this task!", "in-progress", LocalDate.parse("2027-01-01"));
+        openerTask.setGroup(group);
+        openerTask.setCreatedBy(user);
+        openerTask.setCreatedDate(LocalDate.now());
+        openerTask.addTaskAssignment(new TaskAssignment(user, openerTask, LocalDate.now()));
+        taskRepo.save(openerTask);
     }
 }
 
