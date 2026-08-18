@@ -95,9 +95,9 @@ public class GroupService {
     //PATCHES
     @Transactional
     public void updateGroup(Long id, GroupUpdateRequest request) {
-
         Group group = groupRepo.findById(request.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find group"));
         group.setName(request.getName());
+        group.setDescription(request.getDescription());
     }
 
     @Transactional

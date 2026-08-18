@@ -19,7 +19,7 @@ public class AppUser {
 
     private String email;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
     private Set<GroupMembership> memberships = new HashSet<>();
 
     @OneToMany(mappedBy = "assignedUser", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -1,9 +1,7 @@
 package com.liamrankine.taskmanager.configurations;
 import com.liamrankine.taskmanager.entities.*;
-import com.liamrankine.taskmanager.enumerations.GroupRole;
 import com.liamrankine.taskmanager.repositories.AppUserRepository;
-import com.liamrankine.taskmanager.repositories.GroupRepository;
-import com.liamrankine.taskmanager.repositories.TaskRepository;
+import com.liamrankine.taskmanager.services.UserMakerService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,9 +58,7 @@ public class SecurityConfig {
     @Bean
     CommandLineRunner seedData(
             AppUserRepository userRepo,
-            GroupRepository groupRepo,
-            TaskRepository taskRepo,
-            PasswordEncoder encoder
+            UserMakerService userMakerService
     ) {
         return args -> {
 
@@ -71,42 +67,27 @@ public class SecurityConfig {
                 if (userRepo.findByUsername("Admin2").isPresent()) {
                     return;
                 }
-                UserMaker(userRepo, groupRepo, taskRepo, encoder, "Admin2", "password");
+
+                userMakerService.UserMaker(
+                        "Admin2",
+                        "Admin2@temp.com",
+                        "password"
+                );
+
                 return;
             }
 
-            UserMaker(userRepo, groupRepo, taskRepo, encoder, "Admin1", "password");
+            userMakerService.UserMaker(
+                    "Admin1",
+                    "Admin1@temp.com",
+                    "password"
+            );
         };
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    private void UserMaker(AppUserRepository userRepo, GroupRepository groupRepo, TaskRepository taskRepo, PasswordEncoder encoder, String name, String password) {
-        AppUser user = new AppUser();
-        user.setUsername(name);
-        user.setPassword(encoder.encode(password));
-
-        userRepo.save(user);
-
-        Group group = new Group();
-        group.setName(name + "'s Group");
-
-        groupRepo.save(group);
-
-        GroupMembership membership = new GroupMembership(group, user, GroupRole.OWNER);
-        group.addMembership(membership);
-        user.addMembership(membership);
-        userRepo.save(user);
-
-        Task openerTask = new Task("Welcome to Task Manager!", "Click on the ellipses button to view all information on this task!", "in-progress", LocalDate.parse("2027-01-01"));
-        openerTask.setGroup(group);
-        openerTask.setCreatedBy(user);
-        openerTask.setCreatedDate(LocalDate.now());
-        openerTask.addTaskAssignment(new TaskAssignment(user, openerTask, LocalDate.now()));
-        taskRepo.save(openerTask);
     }
 }
 

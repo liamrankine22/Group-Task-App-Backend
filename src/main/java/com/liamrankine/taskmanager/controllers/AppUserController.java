@@ -1,6 +1,7 @@
 package com.liamrankine.taskmanager.controllers;
 
 import com.liamrankine.taskmanager.datatransfer.requests.appuser.AppUserRegistrationRequest;
+import com.liamrankine.taskmanager.datatransfer.requests.appuser.AppUserUpdateRequest;
 import com.liamrankine.taskmanager.datatransfer.responses.AppUserResponse;
 import com.liamrankine.taskmanager.entities.AppUser;
 import com.liamrankine.taskmanager.services.AppUserService;
@@ -39,9 +40,9 @@ public class AppUserController {
         return appUserService.getUsersByGroupId(groupId);
     }
 
-    @PostMapping("/register")
-    public void registerUser(@RequestBody AppUserRegistrationRequest request) {
-        appUserService.registerUser(request);
+    @PatchMapping("/update/{id}")
+    public void updateUserInfo(@PathVariable Long id, @RequestBody AppUserUpdateRequest request) {
+        appUserService.updateUserInfo(id, request);
     }
 
     @DeleteMapping("/delete/{id}")

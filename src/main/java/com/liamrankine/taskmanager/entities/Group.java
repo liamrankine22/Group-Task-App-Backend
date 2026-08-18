@@ -14,7 +14,7 @@ public class Group {
     private String name;
     private String description;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "group", orphanRemoval = true)
     private Set<GroupMembership> memberships = new HashSet<>();
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -1,6 +1,7 @@
 package com.liamrankine.taskmanager.services;
 
 import com.liamrankine.taskmanager.datatransfer.requests.appuser.AppUserRegistrationRequest;
+import com.liamrankine.taskmanager.datatransfer.requests.appuser.AppUserUpdateRequest;
 import com.liamrankine.taskmanager.datatransfer.responses.AppUserResponse;
 import com.liamrankine.taskmanager.entities.*;
 import com.liamrankine.taskmanager.enumerations.GroupRole;
@@ -89,9 +90,13 @@ public class AppUserService {
         groupMembershipRepo.save(userMembership);
     }
 
-    //PUTS
-
     //PATCHES
+    @Transactional
+    public void updateUserInfo(Long id, AppUserUpdateRequest request) {
+        AppUser user = appUserRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find user"));
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+    }
 
     //DELETES
     @Transactional

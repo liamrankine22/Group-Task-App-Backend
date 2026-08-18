@@ -14,7 +14,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TaskService {
@@ -63,7 +65,7 @@ public class TaskService {
                 .map(GroupMembership::getGroup)
                 .toList();
 
-        List<Task> userTasks = new ArrayList<>();
+        Set<Task> userTasks = new LinkedHashSet<>();
         for (Group group : userGroups) {
             userTasks.addAll(group.getTasks());
         }
