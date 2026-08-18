@@ -11,6 +11,7 @@ import com.liamrankine.taskmanager.enumerations.UpdateType;
 import com.liamrankine.taskmanager.repositories.*;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -77,6 +78,11 @@ public class GroupService {
 
         groupRepo.save(group);
         groupMembershipRepo.save(membership);
+    }
+
+    @Transactional
+    public ResponseEntity<?> inviteUser(Long groupId, GroupInvitationRequest request) {
+
     }
 
     @Transactional

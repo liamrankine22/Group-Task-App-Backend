@@ -20,6 +20,9 @@ public class Group {
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Task> tasks = new HashSet<>();
 
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<GroupInvitation> invitations = new HashSet<>();
+
     //Constructors
     public Group() {}
     public Group(String name, String description) {
@@ -36,6 +39,10 @@ public class Group {
         memberships.remove(membership);
     }
 
+    public void addInvitation(GroupInvitation invitation) { invitations.add(invitation); }
+
+    public void removeInvitation(GroupInvitation invitation) { invitations.remove(invitation); }
+
     public void addTask(Task task) {
         tasks.add(task);
     }
@@ -48,6 +55,7 @@ public class Group {
     public void setName(String name) { this.name = name; }
     public void setDescription(String description) {this.description = description;}
     public void setMemberships(Set<GroupMembership> memberships) { this.memberships = memberships; }
+    public void setInvitations(Set<GroupInvitation> invitations) { this.invitations = invitations; }
     public void setTasks(Set<Task> tasks) { this.tasks = tasks; }
 
     //Getters
@@ -55,5 +63,6 @@ public class Group {
     public String getName() { return name; }
     public String getDescription() { return description; }
     public Set<GroupMembership> getMemberships() { return memberships; }
+    public Set<GroupInvitation> getInvitations() { return invitations; }
     public Set<Task> getTasks() { return tasks; }
 }
